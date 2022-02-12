@@ -7,3 +7,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - All projects versions raised to .net5
+
+### Added
+-Movies.GrainClients.Test project
+-Movies.Grains.Test project
+-Movies.Server.Test project
