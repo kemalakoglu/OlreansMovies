@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Movies.Contracts
 {
-	public interface ISampleGrain : IGrainWithStringKey
+	public interface IMovieGrain : IGrainWithStringKey
 	{
-		Task<SampleDataModel> Get();
+		Task<MovieModel> Get();
 		Task Set(string name);
 	}
 }

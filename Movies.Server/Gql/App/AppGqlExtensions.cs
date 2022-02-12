@@ -14,13 +14,14 @@ namespace Movies.Server.Gql.App
 					options.EnableMetrics = true;
 					options.ExposeExceptions = true;
 				})
+		        .AddGraphTypes(typeof(AppSchema), ServiceLifetime.Scoped)
 				.AddNewtonsoftJson();
 
-			services.AddSingleton<ISchema, AppSchema>();
-			services.AddSingleton<AppGraphQuery>();
-			services.AddSingleton<AppGraphMutation>();
+			services.AddScoped<ISchema, AppSchema>();
+			services.AddScoped<AppGraphQuery>();
+			services.AddScoped<AppGraphMutation>();
 
-			services.AddSingleton<SampleDataGraphType>();
+			services.AddScoped<MovieGraphType>();
 		}
 	}
 }
