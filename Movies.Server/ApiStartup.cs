@@ -7,11 +7,14 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Movies.Aggregates.Extensions;
 using Movies.Core;
 using Movies.GrainClients;
+using Movies.Server.Extensions;
 using Movies.Server.Gql;
 using Movies.Server.Gql.App;
 using Movies.Server.Infrastructure;
+using System.IO;
 
 namespace Movies.Server
 {
@@ -51,9 +54,17 @@ namespace Movies.Server
 			});
 
 			services.AddAppClients();
+			services.AddAppGrains();
 			services.AddAppGraphQL();
 			services.AddControllers()
 			.AddNewtonsoftJson();
+			services.ConfigureLogger(_configuration);
+			services.ConfigureSwagger();
+
+			services.AddStackExchangeRedisCache(options =>
+			{
+				options.Configuration = "localhost:6001";
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -77,6 +88,15 @@ namespace Movies.Server
 				app.UseDeveloperExceptionPage();
 				app.UseGraphiQl();
 			}
+
+			app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+			app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+			app.UseStaticFiles();
+			// Enable middleware to serve generated Swagger as a JSON endpoint.
+			app.UseSwagger();
+			// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+			//app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/ACPIdentity/swagger.json", "ACPIdentity"); });
+			app.UseSwaggerUI(c => { c.SwaggerEndpoint("../swagger/OrleansMovie/swagger.json", "OrleansMovie"); });
 
 			app.UseRouting();
 

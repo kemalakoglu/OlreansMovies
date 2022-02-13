@@ -1,4 +1,4 @@
-﻿namespace Movies.Contracts
+﻿namespace Movies.Contracts.Entity
 {
 	public enum Genre
 	{

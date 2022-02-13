@@ -22,3 +22,17 @@ All notable changes to this project will be documented in this file.
 -MovieGrainClientTest unit tests were defined into Movies.Server.Test project but not filled yet
 -MovieGrainClientTest unit tests were defined into Movies.GrainClients.Test project but not filled yet
 -MovieGrainsTest unit tests were defined into Movies.Grains.Test project but not filled yet
+
+## [1.0.0] - 14-02-2022
+### Added
+-MongoDB Driver Added
+-Mongo Repository was written
+-Redis Cache was added for all query operations
+-MovieGrain and MovieGrainClient methods were written
+-Movies Controller end-points were written
+-ErrorHandlingMiddleware were created, all web api calls were logged by ELK
+-ELK, Swagger, ZeppelingFramework.Core.Abstraction libraries were installed as extensions
+-Base Response class, base error class were defined
+-Predicator class were defined
+-Mongo Repository Test project was opened
+-Data migrations was done into MongoDB
