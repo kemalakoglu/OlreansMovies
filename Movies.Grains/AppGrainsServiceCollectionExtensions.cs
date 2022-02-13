@@ -1,12 +1,17 @@
 ﻿// ReSharper disable once CheckNamespace
+using Microsoft.Extensions.Configuration;
+using Movies.Aggregates.Film;
+using Movies.Contracts;
+using Movies.Grains;
+
 namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class AppGrainsServiceCollectionExtensions
 	{
 
-		public static IServiceCollection AddAppGrains(this IServiceCollection services)
+		public static void AddAppGrains(this IServiceCollection services)
 		{
-			return services;
+			services.AddScoped<IMovieGrain, MovieGrain>();
 		}
 
 		public static IServiceCollection AddAppHotsGrains(this IServiceCollection services)

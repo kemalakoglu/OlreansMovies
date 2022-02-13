@@ -29,11 +29,7 @@ namespace Movies.Server.Gql.App
 			);
 
 			Field<ListGraphType<MovieGraphType>>("getRatedFilms",
-				arguments: new QueryArguments(new QueryArgument<StringGraphType>
-				{
-					Name = "genre"
-				}),
-				resolve: ctx => movieGrainClient.GetRatedFilms()
+				resolve: ctx => movieGrainClient.GetRatedMovies()
 			);
 		}
 	}

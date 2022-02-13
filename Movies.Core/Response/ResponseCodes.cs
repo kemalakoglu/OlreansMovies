@@ -12,5 +12,7 @@ namespace Movies.Core.Response
         public const string NotFound = "RC0003";
         public const string Unauthorized = "RC0004";
         public const string BadRequest = "RC0005";
-    }
+		public const string InvalidToken = "RC1000";
+		public const string ExpireToken = "RC1001";
+	}
 }

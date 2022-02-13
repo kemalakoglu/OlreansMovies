@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Movies.Contracts;
+using Movies.Contracts.Entity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,22 +25,25 @@ namespace Movies.Server.Controllers
 		}
 
 		// GET api/sampledata/1234
-		[HttpGet("{id}")]
-		public async Task<MovieModel> Get(string id)
+		[HttpGet]
+		[Route("movie/")]
+		public async Task<MovieModel> Get([FromRoute] string id)
 		{
 			var result = await _client.Get(id).ConfigureAwait(false);
 			return result;
 		}
 
 		[HttpGet]
-		public async Task<IEnumerable<MovieModel>> GetAll(string queries)
+		[Route("filter/{genre?}")]
+		public async Task<IEnumerable<MovieModel>> GetList([FromRoute] string genre)
 		{
-			return new List<MovieModel>();
+			return await _client.GetList(genre).ConfigureAwait(false);
 		}
 
-		// POST api/sampledata/1234
-		[HttpPost("{id}")]
-		public async Task Set([FromRoute] string id, [FromForm] string name)
-			=> await _client.Set(id, name).ConfigureAwait(false);
+		[HttpPost]
+		public async Task Set([FromBody] MovieModel entity) => await _client.Set(entity).ConfigureAwait(false);
+
+		[HttpPut("{id}")]
+		public async Task Set([FromRoute]string id, [FromBody] MovieModel entity) => await _client.Update(id, entity).ConfigureAwait(false);
 	}
 }
