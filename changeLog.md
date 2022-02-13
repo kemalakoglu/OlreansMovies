@@ -20,3 +20,5 @@ All notable changes to this project will be documented in this file.
 -Task<IEnumerable<MovieModel>> GetRatedFilms(); interface was added into IMovieGrainClient interface
 -Task Update(string key, string name); interface was added into IMovieGrainClient interface
 -MovieGrainClientTest unit tests were defined into Movies.Server.Test project but not filled yet
+-MovieGrainClientTest unit tests were defined into Movies.GrainClients.Test project but not filled yet
+-MovieGrainsTest unit tests were defined into Movies.Grains.Test project but not filled yet
