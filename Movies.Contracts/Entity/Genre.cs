@@ -1,17 +1,16 @@
-﻿namespace Movies.Contracts.Entity
+﻿namespace Movies.Contracts.Entity;
+
+public enum Genre
 {
-	public enum Genre
-	{
-		action,
-		adventure,
-		comedy,
-		crime,
-		biography,
-		drama,
-		history,
-		sport,
-		mystery,
-		thriller,
-		scifi,
-	}
+	action,
+	adventure,
+	comedy,
+	crime,
+	biography,
+	drama,
+	history,
+	sport,
+	mystery,
+	thriller,
+	scifi
 }

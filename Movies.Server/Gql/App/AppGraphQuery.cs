@@ -1,36 +1,28 @@
 ﻿using GraphQL.Types;
 using Movies.Contracts;
 using Movies.Server.Gql.Types;
-using Zeppeling.Framework.Abstactions.Response;
 
-namespace Movies.Server.Gql.App
+namespace Movies.Server.Gql.App;
+
+public class AppGraphQuery : ObjectGraphType
 {
-	public class AppGraphQuery : ObjectGraphType
+	public AppGraphQuery(IMovieGrainClient movieGrainClient)
 	{
-		public AppGraphQuery(IMovieGrainClient movieGrainClient)
-		{
-			Name = "AppQueries";
+		Name = "AppQueries";
 
-			Field<MovieGraphType>(
-				"get",
-				arguments: new QueryArguments(new QueryArgument<StringGraphType>
-				{
-					Name = "id"
-				}),
-				resolve: ctx => movieGrainClient.Get(ctx.Arguments["id"].ToString())
-			);
+		Field<MovieGraphType>(
+			"get",
+			arguments: new QueryArguments(new QueryArgument<StringGraphType> {Name = "id"}),
+			resolve: ctx => movieGrainClient.Get(ctx.Arguments["id"].ToString())
+		);
 
-			Field<ListGraphType<MovieGraphType>>("getList",
-				arguments: new QueryArguments(new QueryArgument<StringGraphType>
-				{
-					Name = "genre"
-				}),
-				resolve: ctx => movieGrainClient.GetList(ctx.Arguments["genre"].ToString())
-			);
+		Field<ListGraphType<MovieGraphType>>("getList",
+			arguments: new QueryArguments(new QueryArgument<StringGraphType> {Name = "genre"}),
+			resolve: ctx => movieGrainClient.GetList(ctx.Arguments["genre"].ToString())
+		);
 
-			Field<ListGraphType<MovieGraphType>>("getRatedFilms",
-				resolve: ctx => movieGrainClient.GetRatedMovies()
-			);
-		}
+		Field<ListGraphType<MovieGraphType>>("getRatedFilms",
+			resolve: ctx => movieGrainClient.GetRatedMovies()
+		);
 	}
 }

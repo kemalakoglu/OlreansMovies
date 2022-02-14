@@ -36,3 +36,16 @@ All notable changes to this project will be documented in this file.
 -Predicator class were defined
 -Mongo Repository Test project was opened
 -Data migrations was done into MongoDB
+
+## [1.0.0] - 15-02-2022
+### Added
+-MovieGrainClientTest.cs tests were written
+-MoviesControllerTest.cs tests were written
+-MoviesRepositoryTest.cs tests were written
+-MoviesGrainsTest.cs tests were written
+
+### Changed
+-ErrorHandlingMiddleware logs are changed 
+-GetRatedMovies response was checked from cache at first
+-Get response was checked from cache at first
+-Code Clean-up

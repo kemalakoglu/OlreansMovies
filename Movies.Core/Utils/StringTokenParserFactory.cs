@@ -1,24 +1,22 @@
 ﻿using System.Collections.Concurrent;
 
-namespace Movies.Core.Utils
+namespace Movies.Core.Utils;
+
+public interface IStringTokenParserFactory
 {
-	public interface IStringTokenParserFactory
-	{
-		/// <summary>
-		/// Get or create and cache the string token parser for the specified template.
-		/// </summary>
-		/// <param name="template">Template to get parser for.</param>
-		/// <returns></returns>
-		StringTokenParser Get(string template);
-	}
+	/// <summary>
+	///     Get or create and cache the string token parser for the specified template.
+	/// </summary>
+	/// <param name="template">Template to get parser for.</param>
+	/// <returns></returns>
+	StringTokenParser Get(string template);
+}
 
-	public class StringTokenParserFactory : IStringTokenParserFactory
-	{
-		private static readonly ConcurrentDictionary<string, StringTokenParser> TemplateParserCache
-			= new ConcurrentDictionary<string, StringTokenParser>();
+public class StringTokenParserFactory : IStringTokenParserFactory
+{
+	private static readonly ConcurrentDictionary<string, StringTokenParser> TemplateParserCache = new();
 
-		/// <inheritdoc />
-		public StringTokenParser Get(string template)
-			=> TemplateParserCache.GetOrAdd(template, arg => new StringTokenParser(arg));
-	}
+	/// <inheritdoc />
+	public StringTokenParser Get(string template)
+		=> TemplateParserCache.GetOrAdd(template, arg => new StringTokenParser(arg));
 }

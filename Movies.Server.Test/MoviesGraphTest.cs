@@ -3,43 +3,35 @@ using GraphQL.Client.Abstractions;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
 using Moq.AutoMock;
-using Movies.Contracts;
-using Movies.Server.Controllers;
-using Movies.Server.Gql.App;
 using Movies.Server.Gql.Types;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Xunit;
-using Zeppeling.Framework.Abstactions.Response;
 
-namespace Movies.Server.Test
+namespace Movies.Server.Test;
+
+public class MoviesGraphTest
 {
-	public class MoviesGraphTest
+	private readonly IGraphQLClient _client;
+
+	public MoviesGraphTest()
 	{
+		_client = new GraphQLHttpClient("http://localhost:6600/graphql", new NewtonsoftJsonSerializer());
+	}
 
-		private readonly IGraphQLClient _client;
-		public MoviesGraphTest()
+	/// <summary>
+	/// </summary>
+	/// <param name="Id"></param>
+	[Theory]
+	[InlineData("1234")]
+	public async void GetFieldShouldReturnMovieDataById(string Id)
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieModel = mocker.CreateInstance<MovieGraphType>();
+
+		//Act
+		var query = new GraphQLRequest
 		{
-			_client = new GraphQLHttpClient("http://localhost:6600/graphql", new NewtonsoftJsonSerializer());
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="Id"></param>
-		[Theory]
-		[InlineData("1234")]
-		public async void GetFieldShouldReturnMovieDataById(string Id)
-		{
-			//Arrange
-			var mocker = new AutoMocker();
-			var movieModel = mocker.CreateInstance<MovieGraphType>();
-
-			//Act
-			var query = new GraphQLRequest
-			{
-				Query = @"query get($id: String!) {
+			Query = @"query get($id: String!) {
                                 movie(id: $id) {
                                           Id,
                                           Name,
@@ -51,30 +43,30 @@ namespace Movies.Server.Test
                                           Img
                                           }
                                 }"
-			};
-			var response = await _client.SendQueryAsync<MovieGraphType>(query);
+		};
+		var response = await _client.SendQueryAsync<MovieGraphType>(query);
 
-			//Assert
-			Assert.Equal(movieModel, response.Data);
+		//Assert
+		Assert.Equal(movieModel, response.Data);
 
-			mocker.VerifyAll();
-		}
+		mocker.VerifyAll();
+	}
 
-		/// <summary>
-		/// Get Method Should Returns ErrorMessage If Id Parameter Is Null or Empty
-		/// </summary>
-		/// <param name="Id"></param>
-		[Fact]
-		public async void GetFieldShouldReturnErrorMessageIfIdParameterIsNullOrEmpty()
+	/// <summary>
+	///     Get Method Should Returns ErrorMessage If Id Parameter Is Null or Empty
+	/// </summary>
+	/// <param name="Id"></param>
+	[Fact]
+	public async void GetFieldShouldReturnErrorMessageIfIdParameterIsNullOrEmpty()
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieModel = mocker.CreateInstance<MovieGraphType>();
+
+		//Act
+		var query = new GraphQLRequest
 		{
-			//Arrange
-			var mocker = new AutoMocker();
-			var movieModel = mocker.CreateInstance<MovieGraphType>();
-
-			//Act
-			var query = new GraphQLRequest
-			{
-				Query = @"query get($id: String!) {
+			Query = @"query get($id: String!) {
                                 movie(id: $id) {
                                           Id,
                                           Name,
@@ -86,26 +78,26 @@ namespace Movies.Server.Test
                                           Img
                                           }
                                 }"
-			};
-			var response = await _client.SendQueryAsync<MovieGraphType>(query);
+		};
+		var response = await _client.SendQueryAsync<MovieGraphType>(query);
 
-			//Assert
-			Assert.Equal("Id should be passed", "Id should be passed");
+		//Assert
+		Assert.Equal("Id should be passed", "Id should be passed");
 
-			mocker.VerifyAll();
-		}
+		mocker.VerifyAll();
+	}
 
-		[Fact]
-		public async void GetFieldShouldReturnErrorMessageIfIdParameterIsNotString()
+	[Fact]
+	public async void GetFieldShouldReturnErrorMessageIfIdParameterIsNotString()
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieModel = mocker.CreateInstance<MovieGraphType>();
+
+		//Act
+		var query = new GraphQLRequest
 		{
-			//Arrange
-			var mocker = new AutoMocker();
-			var movieModel = mocker.CreateInstance<MovieGraphType>();
-
-			//Act
-			var query = new GraphQLRequest
-			{
-				Query = @"query get($id: String!) {
+			Query = @"query get($id: String!) {
                                 movie(id: $id) {
                                           Id,
                                           Name,
@@ -117,71 +109,69 @@ namespace Movies.Server.Test
                                           Img
                                           }
                                 }"
-			};
-			var response = await _client.SendQueryAsync<MovieGraphType>(query);
+		};
+		var response = await _client.SendQueryAsync<MovieGraphType>(query);
 
-			//Assert
-			Assert.Equal("Id should be string", "Id should be string");
+		//Assert
+		Assert.Equal("Id should be string", "Id should be string");
 
-			mocker.VerifyAll();
-		}
+		mocker.VerifyAll();
+	}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		[Fact]
-		public async void GetRatedFilmsFieldShouldReturnMovieList()
-		{
-			// todo
-		}
+	/// <summary>
+	/// </summary>
+	[Fact]
+	public async void GetRatedFilmsFieldShouldReturnMovieList()
+	{
+		// todo
+	}
 
-		[Theory]
-		[InlineData("comedy")]
-		public async void GetListFieldShouldReturnMovieListByGenreFilter(string genre)
-		{
-			// todo
-		}
+	[Theory]
+	[InlineData("comedy")]
+	public async void GetListFieldShouldReturnMovieListByGenreFilter(string genre)
+	{
+		// todo
+	}
 
-		[Fact]
-		public async void GetListFieldShouldReturnFullMovieList()
-		{
-			// todo
-		}
+	[Fact]
+	public async void GetListFieldShouldReturnFullMovieList()
+	{
+		// todo
+	}
 
-		[Fact]
-		public async void SetMutationShouldPersistNewEntity()
-		{
-			// todo
-		}
+	[Fact]
+	public async void SetMutationShouldPersistNewEntity()
+	{
+		// todo
+	}
 
-		[Fact]
-		public async void SetMutationShouldThrowExceptionIfIdIsExistInRequestBody()
-		{
-			// todo
-		}
+	[Fact]
+	public async void SetMutationShouldThrowExceptionIfIdIsExistInRequestBody()
+	{
+		// todo
+	}
 
-		[Fact]
-		public async void SetMutationShouldThrowExceptionIfEntityAlreadyExist()
-		{
-			// todo
-		}
+	[Fact]
+	public async void SetMutationShouldThrowExceptionIfEntityAlreadyExist()
+	{
+		// todo
+	}
 
-		[Fact]
-		public async void UpdateMutationShouldPersistExistEntity()
-		{
-			// todo
-		}
+	[Fact]
+	public async void UpdateMutationShouldPersistExistEntity()
+	{
+		// todo
+	}
 
-		[Fact]
-		public async void UpdateMutationShouldThrowExceptionIfIdIsMissingInRequestBody()
-		{
-			// todo
-		}
+	[Fact]
+	public async void UpdateMutationShouldThrowExceptionIfIdIsMissingInRequestBody()
+	{
+		// todo
+	}
 
-		[Fact]
-		public async void UpdateMutationShouldThrowExceptionIfEntityIsntExist()
-		{
-			// todo
-		}
+	[Fact]
+	public async void UpdateMutationShouldThrowExceptionIfEntityIsntExist()
+	{
+		// todo
 	}
 }

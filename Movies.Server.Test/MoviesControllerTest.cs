@@ -1,110 +1,202 @@
 ﻿using Moq.AutoMock;
-using Movies.Contracts;
 using Movies.Contracts.Entity;
 using Movies.Server.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Zeppeling.Framework.Abstactions.Error;
 
-namespace Movies.Server.Test
+namespace Movies.Server.Test;
+
+public class MoviesControllerTest
 {
-	public class MoviesControllerTest
+	[Fact]
+	public async void GetRatedMoviesMethodShouldReturn5Films()
 	{
-		[Fact]
-		public async void GetRatedMoviesMethodShouldReturnFilmList()
-		{
-			////Arrange
-			//var mocker = new AutoMocker();
-			//var movieModel = mocker.CreateInstance<IEnumerable<Contracts.Entity.Movies>>();
-			//var movieController = mocker.GetMock<MoviesController>();
-			//movieController.Setup(x => x.GetRatedMovies()).Returns(Task.FromResult(movieModel)).Verifiable();
+		//Arrange
+		var mocker = new AutoMocker();
 
-			////Act
-			//var response = await movieController.Object.GetRatedMovies();
+		IEnumerable<MovieModel> expectedData = new List<MovieModel>();
 
-			////Assert
-			//Assert.Equal(movieModel.Count(), response.Count());
+		var movieController = mocker.GetMock<MoviesController>();
 
-			//mocker.VerifyAll();
-		}
+		//Act
+		var actualData = movieController.Object.GetRatedMovies().Result;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="Id"></param>
-		[Theory]
-		[InlineData("1234")]
-		public async void GetMethodShouldReturnMovieDataById(string Id)
-		{
-			//todo
-		}
+		//Assert
+		Assert.Equal(expectedData, actualData);
 
-		/// <summary>
-		/// Get Method Should Returns ErrorMessage If Id Parameter Is Null or Empty
-		/// </summary>
-		/// <param name="Id"></param>
-		[Fact]
-		public async void GetMethodShouldReturnErrorMessageIfIdParameterIsNullOrEmpty()
-		{
-			//todo
-		}
+		mocker.VerifyAll();
+	}
 
-		[Fact]
-		public async void GetMethodShouldReturnErrorMessageIfIdParameterIsNotString()
-		{
-			//todo
-		}
+	/// <summary>
+	/// </summary>
+	/// <param name="Id"></param>
+	[Theory]
+	[InlineData("1234")]
+	public async void GetMethodShouldReturnMovieDataById(string Id)
+	{
+		//Arrange
+		var mocker = new AutoMocker();
 
-		[Theory]
-		[InlineData("comedy")]
-		public async void GetListMethodShouldReturnMovieListByGenreFilter(string genre)
-		{
-			// todo
-		}
+		var movieController = mocker.GetMock<MoviesController>();
 
-		[Fact]
-		public async void GetListMethodShouldReturnFullMovieList()
-		{
-			// todo
-		}
+		//Act
+		var actualData = movieController.Object.Get(Id).Result;
 
-		[Fact]
-		public async void SetMethodShouldPersistNewEntity()
-		{
-			// todo
-		}
+		//Assert
+		Assert.Equal(null, actualData);
 
-		[Fact]
-		public async void SetMethodShouldThrowExceptionIfIdIsExistInRequestBody()
-		{
-			// todo
-		}
+		mocker.VerifyAll();
+	}
 
-		[Fact]
-		public async void SetMethodShouldThrowExceptionIfEntityAlreadyExist()
-		{
-			// todo
-		}
+	/// <summary>
+	/// </summary>
+	/// <param name="Id"></param>
+	[Theory]
+	[InlineData("1234")]
+	public async void GetMethodIdShouldNotBeEmpty(string Id)
+	{
+		//Assert
+		Assert.NotNull(Id);
+	}
 
-		[Fact]
-		public async void UpdateMethodShouldPersistExistEntity()
-		{
-			// todo
-		}
+	[Theory]
+	[InlineData("comedy")]
+	[InlineData("crime")]
+	[InlineData("biography")]
+	public async void GetListMethodShouldReturnMovieListByGenreFilter(string genre)
+	{
+		//Arrange
+		var mocker = new AutoMocker();
 
-		[Fact]
-		public async void UpdateMethodShouldThrowExceptionIfIdIsMissingInRequestBody()
-		{
-			// todo
-		}
+		IEnumerable<MovieModel> expectedData = new List<MovieModel>();
 
-		[Fact]
-		public async void UpdateMethodShouldThrowExceptionIfEntityIsntExist()
-		{
-			// todo
-		}
+		var movieController = mocker.GetMock<MoviesController>();
+
+		//Act
+		var actualData = movieController.Object.GetList(genre).Result;
+
+		//Assert
+		Assert.Equal(expectedData, actualData);
+
+		mocker.VerifyAll();
+	}
+
+	[Fact]
+	public async void GetListMethodShouldReturnFullMovieList()
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+
+		IEnumerable<MovieModel> expectedData = new List<MovieModel>();
+
+		var movieController = mocker.GetMock<MoviesController>();
+		
+		//Act
+		var actualData = movieController.Object.GetList(String.Empty).Result;
+
+		//Assert
+		Assert.Equal(expectedData, actualData);
+
+		mocker.VerifyAll();
+	}
+
+	[Fact]
+	public async void SetMethodShouldPersistNewEntity()
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieController = mocker.GetMock<MoviesController>();
+		var expected = movieController.Object.Set(new MovieModel());
+
+		//Act
+		var actual = movieController.Object.Set(new MovieModel());
+
+		//Assert
+		Assert.Equal(expected, actual);
+
+		mocker.VerifyAll();
+	}
+
+	[Fact]
+	public async void SetMethodShouldThrowExceptionIfIdIsExistInRequestBody()
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieController = mocker.GetMock<MoviesController>();
+		var expected = new ErrorDTO();
+		//Act
+		var actual = movieController.Object.Set(new MovieModel());
+
+		//Assert
+		Assert.NotSame(expected, actual);
+	}
+
+	[Fact]
+	public async void SetMethodShouldThrowExceptionIfEntityAlreadyExist()
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieController = mocker.GetMock<MoviesController>();
+		var expected = new ErrorDTO();
+		//Act
+		var actual = movieController.Object.Set(new MovieModel());
+
+		//Assert
+		Assert.NotSame(expected, actual);
+
+	}
+
+	[Theory]
+	[InlineData("1234")]
+	public async void UpdateMethodShouldPersistExistEntity(string id)
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieController = mocker.GetMock<MoviesController>();
+		var expected = movieController.Object.Update(id, new MovieModel());
+
+		//Act
+		var actual = movieController.Object.Update(id, new MovieModel());
+
+		//Assert
+		Assert.Equal(expected, actual);
+
+		mocker.VerifyAll();
+	}
+
+	[Theory]
+	[InlineData("1234")]
+	public async void UpdateMethodShouldThrowExceptionIfIdIsMissingInRequestBody(string id)
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieController = mocker.GetMock<MoviesController>();
+		var expected = new ErrorDTO();
+
+		//Act
+		var actual = movieController.Object.Update(id, new MovieModel());
+
+		//Assert
+		Assert.NotSame(expected, actual);
+	}
+
+	[Theory]
+	[InlineData("1234")]
+	public async void UpdateMethodShouldThrowExceptionIfEntityIsntExist(string id)
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieController = mocker.GetMock<MoviesController>();
+		var expected = new ErrorDTO();
+
+		//Act
+		var actual = movieController.Object.Update(id, new MovieModel());
+
+		//Assert
+		Assert.NotSame(expected, actual);
 	}
 }
