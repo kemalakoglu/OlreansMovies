@@ -1,90 +1,233 @@
+using Moq.AutoMock;
+using Movies.Contracts;
+using Movies.Contracts.Entity;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
+using Zeppeling.Framework.Abstactions.Error;
 
-namespace Movies.GrainClients.Test
+namespace Movies.GrainClients.Test;
+
+public class MovieGrainClientTest
 {
-    public class MovieGrainClientTest
-    {
-		[Fact]
-		public async void GetRatedMoviesMethodShouldReturnFilmList()
-		{
-			//todo
-		}
+	[Fact]
+	public async void GetRatedMoviesMethodShouldReturn5Films()
+	{
+		//Arrange
+		var mocker = new AutoMocker();
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="Id"></param>
-		[Theory]
-		[InlineData("1234")]
-		public async void GetMethodShouldReturnMovieDataById(string Id)
+		IEnumerable<MovieModel> expectedData = new List<MovieModel>()
 		{
-			//todo
-		}
+			new MovieModel(),
+			new MovieModel(),
+			new MovieModel(),
+			new MovieModel(),
+			new MovieModel()
+		};
 
-		/// <summary>
-		/// Get Method Should Returns ErrorMessage If Id Parameter Is Null or Empty
-		/// </summary>
-		/// <param name="Id"></param>
-		[Fact]
-		public async void GetMethodShouldReturnErrorMessageIfIdParameterIsNullOrEmpty()
-		{
-			//todo
-		}
+		var movieGrainClient = mocker.GetMock<IMovieGrainClient>();
+		movieGrainClient.Setup(x => x.GetRatedMovies()).Returns(Task.FromResult(expectedData)).Verifiable();
 
-		[Fact]
-		public async void GetMethodShouldReturnErrorMessageIfIdParameterIsNotString()
-		{
-			//todo
-		}
+		//Act
+		var actualData = movieGrainClient.Object.GetRatedMovies().Result;
 
-		[Theory]
-		[InlineData("comedy")]
-		public async void GetListMethodShouldReturnMovieListByGenreFilter(string genre)
-		{
-			// todo
-		}
+		//Assert
+		Assert.Equal(expectedData.Count(), actualData.Count());
+		Assert.NotEmpty(actualData);
 
-		[Fact]
-		public async void GetListMethodShouldReturnFullMovieList()
-		{
-			// todo
-		}
+		mocker.VerifyAll();
+	}
 
-		[Fact]
-		public async void SetMethodShouldPersistNewEntity()
-		{
-			// todo
-		}
+	/// <summary>
+	/// </summary>
+	/// <param name="Id"></param>
+	[Theory]
+	[InlineData("1234")]
+	public async void GetMethodShouldReturnMovieDataById(string Id)
+	{
+		//Arrange
+		var mocker = new AutoMocker();
 
-		[Fact]
-		public async void SetMethodShouldThrowExceptionIfIdIsExistInRequestBody()
-		{
-			// todo
-		}
+		MovieModel expectedData = new MovieModel();
 
-		[Fact]
-		public async void SetMethodShouldThrowExceptionIfEntityAlreadyExist()
-		{
-			// todo
-		}
+		var movieGrainClient = mocker.GetMock<IMovieGrainClient>();
+		movieGrainClient.Setup(x => x.Get(Id)).Returns(Task.FromResult(expectedData)).Verifiable();
 
-		[Fact]
-		public async void UpdateMethodShouldPersistExistEntity()
-		{
-			// todo
-		}
+		//Act
+		var actualData = movieGrainClient.Object.Get(Id).Result;
 
-		[Fact]
-		public async void UpdateMethodShouldThrowExceptionIfIdIsMissingInRequestBody()
-		{
-			// todo
-		}
+		//Assert
+		Assert.Equal(expectedData, actualData);
+		Assert.NotNull(Id);
 
-		[Fact]
-		public async void UpdateMethodShouldThrowExceptionIfEntityIsntExist()
+		mocker.VerifyAll();
+	}
+
+	/// <summary>
+	/// </summary>
+	/// <param name="Id"></param>
+	[Theory]
+	[InlineData("1234")]
+	public async void GetMethodIdShouldNotBeEmpty(string Id)
+	{
+		//Assert
+		Assert.NotNull(Id);
+	}
+
+	[Theory]
+	[InlineData("comedy")]
+	[InlineData("crime")]
+	[InlineData("biography")]
+	public async void GetListMethodShouldReturnMovieListByGenreFilter(string genre)
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+
+		IEnumerable<MovieModel> expectedData = new List<MovieModel>()
 		{
-			// todo
-		}
+			new MovieModel(),
+			new MovieModel(),
+			new MovieModel(),
+			new MovieModel(),
+			new MovieModel()
+		};
+
+		var movieGrainClient = mocker.GetMock<IMovieGrainClient>();
+		movieGrainClient.Setup(x => x.GetList(genre)).Returns(Task.FromResult(expectedData)).Verifiable();
+
+		//Act
+		var actualData = movieGrainClient.Object.GetList(genre).Result;
+
+		//Assert
+		Assert.Equal(expectedData.Count(), actualData.Count());
+
+		mocker.VerifyAll();
+	}
+
+	[Fact]
+	public async void GetListMethodShouldReturnFullMovieList()
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+
+		IEnumerable<MovieModel> expectedData = new List<MovieModel>()
+		{
+			new MovieModel(),
+			new MovieModel(),
+			new MovieModel(),
+			new MovieModel(),
+			new MovieModel()
+		};
+
+		var movieGrainClient = mocker.GetMock<IMovieGrainClient>();
+		movieGrainClient.Setup(x => x.GetList(String.Empty)).Returns(Task.FromResult(expectedData)).Verifiable();
+
+		//Act
+		var actualData = movieGrainClient.Object.GetList(String.Empty).Result;
+
+		//Assert
+		Assert.Equal(expectedData.Count(), actualData.Count());
+
+		mocker.VerifyAll();
+	}
+
+	[Fact]
+	public async void SetMethodShouldPersistNewEntity()
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieGrainClient = mocker.GetMock<IMovieGrainClient>();
+		var expected = movieGrainClient.Object.Set(new MovieModel());
+
+		//Act
+		var actual = movieGrainClient.Object.Set(new MovieModel());
+
+		//Assert
+		Assert.Equal(expected, actual);
+
+		mocker.VerifyAll();
+	}
+
+	[Fact]
+	public async void SetMethodShouldThrowExceptionIfIdIsExistInRequestBody()
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieGrainClient = mocker.GetMock<IMovieGrainClient>();
+		var expected = new ErrorDTO();
+		movieGrainClient.Setup(x => x.Set(new MovieModel())).Returns(Task.FromResult(new MovieModel())).Verifiable();
+		//Act
+		var actual = movieGrainClient.Object.Set(new MovieModel());
+
+		//Assert
+		Assert.NotSame(expected, actual);
+	}
+
+	[Fact]
+	public async void SetMethodShouldThrowExceptionIfEntityAlreadyExist()
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieGrainClient = mocker.GetMock<IMovieGrainClient>();
+		var expected = new ErrorDTO();
+		movieGrainClient.Setup(x => x.Set(new MovieModel())).Returns(Task.FromResult(new MovieModel())).Verifiable();
+		//Act
+		var actual = movieGrainClient.Object.Set(new MovieModel());
+
+		//Assert
+		Assert.NotSame(expected, actual);
+
+	}
+
+	[Theory]
+	[InlineData("1234")]
+	public async void UpdateMethodShouldPersistExistEntity(string id)
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieGrainClient = mocker.GetMock<IMovieGrainClient>();
+		var expected = movieGrainClient.Object.Update(id, new MovieModel());
+
+		//Act
+		var actual = movieGrainClient.Object.Update(id, new MovieModel());
+
+		//Assert
+		Assert.Equal(expected, actual);
+
+		mocker.VerifyAll();
+	}
+
+	[Theory]
+	[InlineData("1234")]
+	public async void UpdateMethodShouldThrowExceptionIfIdIsMissingInRequestBody(string id)
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieGrainClient = mocker.GetMock<IMovieGrainClient>();
+		var expected = new ErrorDTO();
+		movieGrainClient.Setup(x => x.Update(id, new MovieModel())).Returns(Task.FromResult(new MovieModel())).Verifiable();
+		//Act
+		var actual = movieGrainClient.Object.Update(id, new MovieModel());
+
+		//Assert
+		Assert.NotSame(expected, actual);
+	}
+
+	[Theory]
+	[InlineData("1234")]
+	public async void UpdateMethodShouldThrowExceptionIfEntityIsntExist(string id)
+	{
+		//Arrange
+		var mocker = new AutoMocker();
+		var movieGrainClient = mocker.GetMock<IMovieGrainClient>();
+		var expected = new ErrorDTO();
+		movieGrainClient.Setup(x => x.Update(id, new MovieModel())).Returns(Task.FromResult(new MovieModel())).Verifiable();
+		//Act
+		var actual = movieGrainClient.Object.Update(id, new MovieModel());
+
+		//Assert
+		Assert.NotSame(expected, actual);
 	}
 }

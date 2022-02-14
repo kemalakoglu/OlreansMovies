@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace Movies.Core.Web
+namespace Movies.Core.Web;
+
+public class UnauthorizedException : Exception
 {
-	public class UnauthorizedException : Exception
-	{
-	}
 }

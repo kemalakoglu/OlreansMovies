@@ -3,14 +3,12 @@ using Orleans;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Movies.Contracts
+namespace Movies.Contracts;
+
+public interface IMovieGrain : IGrainWithStringKey
 {
-	public interface IMovieGrain : IGrainWithStringKey
-	{
-		Task<MovieModel> Get(string id);
-		Task<IEnumerable<MovieModel>> GetList(string genre);
-		Task<IEnumerable<MovieModel>> GetRatedMovies();
-		Task Update(string id, MovieModel entity);
-		Task Set(MovieModel entity);
-	}
+	Task<MovieModel> Get(string id);
+	Task<IEnumerable<MovieModel>> GetList(string genre);
+	Task Update(string id, MovieModel entity);
+	Task Set(MovieModel entity);
 }

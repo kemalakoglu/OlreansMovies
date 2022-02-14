@@ -2,13 +2,13 @@
 using Movies.Aggregates.Film;
 using Movies.Contracts;
 
-namespace Movies.GrainClients
+namespace Movies.GrainClients;
+
+public static class GrainClientsServiceCollectionExtensions
 {
-	public static class GrainClientsServiceCollectionExtensions
+	public static void AddAppClients(this IServiceCollection services)
 	{
-		public static void AddAppClients(this IServiceCollection services) {
-			services.AddScoped<IMovieRepository, MovieRepository>();
-			services.AddScoped<IMovieGrainClient, MovieGrainClient>();
-		} 
+		services.AddScoped<IMovieRepository, MovieRepository>();
+		services.AddScoped<IMovieGrainClient, MovieGrainClient>();
 	}
 }

@@ -1,16 +1,15 @@
-﻿using System;
-using GraphQL.Types;
+﻿using GraphQL.Types;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
-namespace Movies.Server.Gql.App
+namespace Movies.Server.Gql.App;
+
+public class AppSchema : Schema
 {
-	public class AppSchema : Schema
+	public AppSchema(IServiceProvider provider)
+		: base(provider)
 	{
-		public AppSchema(IServiceProvider provider)
-			: base(provider)
-		{
-			Query = provider.GetRequiredService<AppGraphQuery>();
-			Mutation = provider.GetRequiredService<AppGraphMutation>();
-		}
+		Query = provider.GetRequiredService<AppGraphQuery>();
+		Mutation = provider.GetRequiredService<AppGraphMutation>();
 	}
 }

@@ -1,6 +1,5 @@
-﻿namespace Movies.Aggregates.Film
+﻿namespace Movies.Aggregates.Film;
+
+public class MovieRepositoryBase
 {
-	public class MovieRepositoryBase
-	{
-	}
 }

@@ -1,5 +1,5 @@
 using Moq.AutoMock;
-using Movies.Contracts;
+using Movies.Aggregates.Film;
 using Movies.Contracts.Entity;
 using System;
 using System.Collections.Generic;
@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 using Xunit;
 using Zeppeling.Framework.Abstactions.Error;
 
-namespace Movies.Grains.Test;
+namespace Movies.Repository.Test;
 
-public class MoviesGrainsTest
+public class MoviesRepositoryTest
 {
-
 	[Theory]
 	[InlineData("1234")]
 	public async void GetMethodShouldReturnMovieDataById(string Id)
@@ -22,11 +21,11 @@ public class MoviesGrainsTest
 
 		MovieModel expectedData = new MovieModel();
 
-		var movieGrain = mocker.GetMock<IMovieGrain>();
-		movieGrain.Setup(x => x.Get(Id)).Returns(Task.FromResult(expectedData)).Verifiable();
+		var movieRepository = mocker.GetMock<IMovieRepository>();
+		movieRepository.Setup(x => x.Get(Id)).Returns(Task.FromResult(expectedData)).Verifiable();
 
 		//Act
-		var actualData = movieGrain.Object.Get(Id).Result;
+		var actualData = movieRepository.Object.Get(Id).Result;
 
 		//Assert
 		Assert.Equal(expectedData, actualData);
@@ -73,11 +72,11 @@ public class MoviesGrainsTest
 			new MovieModel()
 		};
 
-		var movieGrain = mocker.GetMock<IMovieGrain>();
-		movieGrain.Setup(x => x.GetList(genre)).Returns(Task.FromResult(expectedData)).Verifiable();
+		var movieRepository = mocker.GetMock<IMovieRepository>();
+		movieRepository.Setup(x => x.GetList(genre)).Returns(Task.FromResult(expectedData.AsQueryable())).Verifiable();
 
 		//Act
-		var actualData = movieGrain.Object.GetList(genre).Result;
+		var actualData = movieRepository.Object.GetList(genre).Result;
 
 		//Assert
 		Assert.Equal(expectedData.Count(), actualData.Count());
@@ -100,11 +99,11 @@ public class MoviesGrainsTest
 			new MovieModel()
 		};
 
-		var movieGrain = mocker.GetMock<IMovieGrain>();
-		movieGrain.Setup(x => x.GetList(String.Empty)).Returns(Task.FromResult(expectedData)).Verifiable();
+		var movieRepository = mocker.GetMock<IMovieRepository>();
+		movieRepository.Setup(x => x.GetList(String.Empty)).Returns(Task.FromResult(expectedData.AsQueryable())).Verifiable();
 
 		//Act
-		var actualData = movieGrain.Object.GetList(String.Empty).Result;
+		var actualData = movieRepository.Object.GetList(String.Empty).Result;
 
 		//Assert
 		Assert.Equal(expectedData.Count(), actualData.Count());
@@ -117,11 +116,11 @@ public class MoviesGrainsTest
 	{
 		//Arrange
 		var mocker = new AutoMocker();
-		var movieGrain = mocker.GetMock<IMovieGrain>();
-		var expected = movieGrain.Object.Set(new MovieModel());
+		var movieRepository = mocker.GetMock<IMovieRepository>();
+		var expected = Task.FromResult(true);
 
 		//Act
-		var actual = movieGrain.Object.Set(new MovieModel());
+		var actual = Task.FromResult(true);
 
 		//Assert
 		Assert.Equal(expected, actual);
@@ -134,11 +133,11 @@ public class MoviesGrainsTest
 	{
 		//Arrange
 		var mocker = new AutoMocker();
-		var movieGrain = mocker.GetMock<IMovieGrain>();
+		var movieRepository = mocker.GetMock<IMovieRepository>();
 		var expected = new ErrorDTO();
-		movieGrain.Setup(x => x.Set(new MovieModel())).Returns(Task.FromResult(new MovieModel())).Verifiable();
+		movieRepository.Setup(x => x.AddAsync(new MovieModel())).Returns(Task.FromResult(true)).Verifiable();
 		//Act
-		var actual = movieGrain.Object.Set(new MovieModel());
+		var actual = movieRepository.Object.AddAsync(new MovieModel());
 
 		//Assert
 		Assert.NotSame(expected, actual);
@@ -149,11 +148,11 @@ public class MoviesGrainsTest
 	{
 		//Arrange
 		var mocker = new AutoMocker();
-		var movieGrain = mocker.GetMock<IMovieGrain>();
+		var movieRepository = mocker.GetMock<IMovieRepository>();
 		var expected = new ErrorDTO();
-		movieGrain.Setup(x => x.Set(new MovieModel())).Returns(Task.FromResult(new MovieModel())).Verifiable();
+		movieRepository.Setup(x => x.AddAsync(new MovieModel())).Returns(Task.FromResult(true)).Verifiable();
 		//Act
-		var actual = movieGrain.Object.Set(new MovieModel());
+		var actual = movieRepository.Object.AddAsync(new MovieModel());
 
 		//Assert
 		Assert.NotSame(expected, actual);
@@ -165,11 +164,11 @@ public class MoviesGrainsTest
 	{
 		//Arrange
 		var mocker = new AutoMocker();
-		var movieGrain = mocker.GetMock<IMovieGrain>();
-		var expected = movieGrain.Object.Update(id, new MovieModel());
+		var movieRepository = mocker.GetMock<IMovieRepository>();
+		var expected = Task.FromResult(true);
 
 		//Act
-		var actual = movieGrain.Object.Update(id, new MovieModel());
+		var actual = Task.FromResult(true);
 
 		//Assert
 		Assert.Equal(expected, actual);
@@ -183,11 +182,11 @@ public class MoviesGrainsTest
 	{
 		//Arrange
 		var mocker = new AutoMocker();
-		var movieGrain = mocker.GetMock<IMovieGrain>();
+		var movieRepository = mocker.GetMock<IMovieRepository>();
 		var expected = new ErrorDTO();
-		movieGrain.Setup(x => x.Update(id, new MovieModel())).Returns(Task.FromResult(new MovieModel())).Verifiable();
+		movieRepository.Setup(x => x.UpdateAsync(id, new MovieModel())).Returns(Task.FromResult(true)).Verifiable();
 		//Act
-		var actual = movieGrain.Object.Update(id, new MovieModel());
+		var actual = movieRepository.Object.UpdateAsync(id, new MovieModel());
 
 		//Assert
 		Assert.NotSame(expected, actual);
@@ -199,11 +198,11 @@ public class MoviesGrainsTest
 	{
 		//Arrange
 		var mocker = new AutoMocker();
-		var movieGrain = mocker.GetMock<IMovieGrain>();
-		var expected = new ErrorDTO();
-		movieGrain.Setup(x => x.Update(id, new MovieModel())).Returns(Task.FromResult(new MovieModel())).Verifiable();
+		var movieRepository = mocker.GetMock<IMovieRepository>();
+		var expected = new ErrorDTO(); ;
+		movieRepository.Setup(x => x.UpdateAsync(id, new MovieModel())).Returns(Task.FromResult(true)).Verifiable();
 		//Act
-		var actual = movieGrain.Object.Update(id, new MovieModel());
+		var actual = movieRepository.Object.UpdateAsync(id, new MovieModel());
 
 		//Assert
 		Assert.NotSame(expected, actual);

@@ -1,17 +1,16 @@
-﻿namespace Movies.Aggregates.Film
+﻿namespace Movies.Aggregates.Film;
+
+public enum Genre
 {
-	public enum Genre
-	{
-		action,
-		adventure,
-		comedy,
-		crime,
-		biography,
-		drama,
-		history,
-		sport,
-		mystery,
-		thriller,
-		scifi,
-	}
+	action,
+	adventure,
+	comedy,
+	crime,
+	biography,
+	drama,
+	history,
+	sport,
+	mystery,
+	thriller,
+	scifi
 }
