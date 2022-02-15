@@ -6,11 +6,15 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Movies.Aggregates.Extensions;
 using Movies.Core;
 using Movies.GrainClients;
 using Movies.Server.Extensions;
 using Movies.Server.Gql.App;
 using Movies.Server.Infrastructure;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace Movies.Server;
 
@@ -19,12 +23,34 @@ public class ApiStartup
 	private readonly IAppInfo _appInfo;
 	private readonly IConfiguration _configuration;
 
+	public static IConfiguration GetProductionConfiguration()
+	{
+		return new ConfigurationBuilder()
+			.SetBasePath(Directory.GetCurrentDirectory())
+			.AddEnvironmentVariables()
+			.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+			.Build();
+	}
+
+	public static IConfiguration GetDevelopmentConfiguration()
+	{
+		return new ConfigurationBuilder()
+			.SetBasePath(Directory.GetCurrentDirectory())
+			.AddEnvironmentVariables()
+			.AddJsonFile("appsettings.dev.json", optional: true)
+			.Build();
+	}
+
 	public ApiStartup(
 		IConfiguration configuration,
 		IAppInfo appInfo
 	)
 	{
-		_configuration = configuration;
+		if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+			_configuration = GetDevelopmentConfiguration();
+		else
+			_configuration = GetProductionConfiguration();
+		//_configuration = configuration;
 		_appInfo = appInfo;
 	}
 
@@ -59,8 +85,10 @@ public class ApiStartup
 
 		services.AddStackExchangeRedisCache(options =>
 		{
-			options.Configuration = "localhost:6001";
+			options.Configuration = _configuration.GetSection("RedisCacheSettings:" + "host").Get<string>();
 		});
+
+		services.RunMongoDbSeeder(_configuration);
 	}
 
 	// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
