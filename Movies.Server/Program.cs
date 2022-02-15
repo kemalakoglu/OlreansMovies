@@ -47,7 +47,8 @@ public class Program
 			.ConfigureAppConfiguration((ctx, cfg) =>
 			{
 				var shortEnvName = AppInfo.MapEnvironmentName(ctx.HostingEnvironment.EnvironmentName);
-				cfg.AddJsonFile("appsettings.json")
+				cfg.SetBasePath(Directory.GetCurrentDirectory())
+					.AddJsonFile("appsettings.json")
 					.AddJsonFile($"appsettings.{shortEnvName}.json", true)
 					.AddJsonFile("app-info.json")
 					.AddEnvironmentVariables()
@@ -59,24 +60,25 @@ public class Program
 
 				cfg.Sources.Clear();
 
-				cfg.AddJsonFile("appsettings.json")
+				cfg.SetBasePath(Directory.GetCurrentDirectory())
+					.AddJsonFile("appsettings.json")
 					.AddJsonFile($"appsettings.{shortEnvName}.json", true)
 					.AddJsonFile("app-info.json")
 					.AddEnvironmentVariables()
 					.AddCommandLine(args);
 			})
-			.UseSerilog((ctx, loggerConfig) =>
-			{
-				loggerConfig.Enrich.FromLogContext()
-					.ReadFrom.Configuration(ctx.Configuration)
-					.Enrich.WithMachineName()
-					.Enrich.WithDemystifiedStackTraces()
-					.WriteTo.Console(
-						outputTemplate:
-						"[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext:l}] {Message:lj}{NewLine}{Exception}");
+			//.UseSerilog((ctx, loggerConfig) =>
+			//{
+			//	loggerConfig.Enrich.FromLogContext()
+			//		.ReadFrom.Configuration(ctx.Configuration)
+			//		.Enrich.WithMachineName()
+			//		.Enrich.WithDemystifiedStackTraces()
+			//		.WriteTo.Console(
+			//			outputTemplate:
+			//			"[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext:l}] {Message:lj}{NewLine}{Exception}");
 
-				loggerConfig.WithAppInfo(appInfo);
-			})
+			//	loggerConfig.WithAppInfo(appInfo);
+			//})
 			.UseOrleans((ctx, builder) =>
 			{
 				builder

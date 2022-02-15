@@ -45,9 +45,12 @@ All notable changes to this project will be documented in this file.
 -MoviesGrainsTest.cs tests were written
 -Graph Mutations are added for add/update operations
 -Graph Input Object is added
+-MongoDb Seeder was added
+-MongoDb and Redis configurations were mapped into appSettings.json
 
 ### Changed
 -ErrorHandlingMiddleware logs are changed 
 -GetRatedMovies response was checked from cache at first
 -Get response was checked from cache at first
 -Code Clean-up
+-appSettings were changed by environments
