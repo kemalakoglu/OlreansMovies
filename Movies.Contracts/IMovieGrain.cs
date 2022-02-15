@@ -9,6 +9,6 @@ public interface IMovieGrain : IGrainWithStringKey
 {
 	Task<MovieModel> Get(string id);
 	Task<IEnumerable<MovieModel>> GetList(string genre);
-	Task Update(string id, MovieModel entity);
-	Task Set(MovieModel entity);
+	Task<MovieModel> Update(string id, MovieModel entity);
+	Task<MovieModel> Set(MovieModel entity);
 }

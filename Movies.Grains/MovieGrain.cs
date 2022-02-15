@@ -16,29 +16,24 @@ public class MovieGrain : Grain<MovieModel>, IMovieGrain
 	public async Task<MovieModel> Get(string id)
 	{
 		_repository = new MovieRepository();
-		var response = await _repository.Get(id);
-		return response;
+		return await _repository.Get(id);
 	}
 
 	public async Task<IEnumerable<MovieModel>> GetList(string genre)
 	{
 		_repository = new MovieRepository();
-		IEnumerable<MovieModel> response = await _repository.GetList(genre);
-
-		return response;
+		return await _repository.GetList(genre);
 	}
 
-	public Task Set(MovieModel entity)
+	public async Task<MovieModel> Set(MovieModel entity)
 	{
 		_repository = new MovieRepository();
-		Task.FromResult(_repository.AddAsync(entity));
-		return Task.CompletedTask;
+		return await _repository.AddAsync(entity);
 	}
 
-	public Task Update(string id, MovieModel entity)
+	public async Task<MovieModel> Update(string id, MovieModel entity)
 	{
 		_repository = new MovieRepository();
-		Task.FromResult(_repository.UpdateAsync(id, entity));
-		return Task.CompletedTask;
+		return await _repository.UpdateAsync(id, entity);
 	}
 }
