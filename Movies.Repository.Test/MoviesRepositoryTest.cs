@@ -135,7 +135,7 @@ public class MoviesRepositoryTest
 		var mocker = new AutoMocker();
 		var movieRepository = mocker.GetMock<IMovieRepository>();
 		var expected = new ErrorDTO();
-		movieRepository.Setup(x => x.AddAsync(new MovieModel())).Returns(Task.FromResult(true)).Verifiable();
+		movieRepository.Setup(x => x.AddAsync(new MovieModel())).Returns(Task.FromResult(new MovieModel())).Verifiable();
 		//Act
 		var actual = movieRepository.Object.AddAsync(new MovieModel());
 
@@ -150,7 +150,7 @@ public class MoviesRepositoryTest
 		var mocker = new AutoMocker();
 		var movieRepository = mocker.GetMock<IMovieRepository>();
 		var expected = new ErrorDTO();
-		movieRepository.Setup(x => x.AddAsync(new MovieModel())).Returns(Task.FromResult(true)).Verifiable();
+		movieRepository.Setup(x => x.AddAsync(new MovieModel())).Returns(Task.FromResult(new MovieModel())).Verifiable();
 		//Act
 		var actual = movieRepository.Object.AddAsync(new MovieModel());
 
@@ -184,7 +184,7 @@ public class MoviesRepositoryTest
 		var mocker = new AutoMocker();
 		var movieRepository = mocker.GetMock<IMovieRepository>();
 		var expected = new ErrorDTO();
-		movieRepository.Setup(x => x.UpdateAsync(id, new MovieModel())).Returns(Task.FromResult(true)).Verifiable();
+		movieRepository.Setup(x => x.UpdateAsync(id, new MovieModel())).Returns(Task.FromResult(new MovieModel())).Verifiable();
 		//Act
 		var actual = movieRepository.Object.UpdateAsync(id, new MovieModel());
 
@@ -200,7 +200,7 @@ public class MoviesRepositoryTest
 		var mocker = new AutoMocker();
 		var movieRepository = mocker.GetMock<IMovieRepository>();
 		var expected = new ErrorDTO(); ;
-		movieRepository.Setup(x => x.UpdateAsync(id, new MovieModel())).Returns(Task.FromResult(true)).Verifiable();
+		movieRepository.Setup(x => x.UpdateAsync(id, new MovieModel())).Returns(Task.FromResult(new MovieModel())).Verifiable();
 		//Act
 		var actual = movieRepository.Object.UpdateAsync(id, new MovieModel());
 

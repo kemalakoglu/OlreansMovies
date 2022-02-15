@@ -16,11 +16,11 @@ public class MovieRepository : IMovieRepository
 		Collection = db.GetCollection<MovieModel>("Movies");
 	}
 
-	public virtual async Task<bool> AddAsync(MovieModel entity)
+	public async Task<MovieModel> AddAsync(MovieModel entity)
 	{
 		var options = new InsertOneOptions { BypassDocumentValidation = false };
 		await Collection.InsertOneAsync(entity, options);
-		return true;
+		return entity;
 	}
 
 	public async Task<MovieModel> Get(string id) => Collection.Find(x => x._id == id).SingleOrDefault();
@@ -35,9 +35,9 @@ public class MovieRepository : IMovieRepository
 		return filmList.AsQueryable();
 	}
 
-	public async Task<bool> UpdateAsync(string id, MovieModel entity)
+	public async Task<MovieModel> UpdateAsync(string id, MovieModel entity)
 	{
 		await Collection.FindOneAndReplaceAsync(x => x._id == id, entity);
-		return true;
+		return entity;
 	}
 }

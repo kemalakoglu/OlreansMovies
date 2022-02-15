@@ -28,18 +28,18 @@ public class MovieGrainClient : IMovieGrainClient
 		_distributedCache = distributedCache;
 	}
 
-	public Task Set(MovieModel entity)
+	public async Task<MovieModel> Set(MovieModel entity)
 	{
 		var grain = _grainFactory.GetGrain<IMovieGrain>(Guid.NewGuid().ToString());
-		var result = grain.Set(entity);
+		var result = await grain.Set(entity);
 		ClearCache();
 		return result;
 	}
 
-	public Task Update(string id, MovieModel entity)
+	public async Task<MovieModel> Update(string id, MovieModel entity)
 	{
 		var grain = _grainFactory.GetGrain<IMovieGrain>(Guid.NewGuid().ToString());
-		var result = grain.Update(id, entity);
+		var result = await grain.Update(id, entity);
 		ClearCache();
 		return result;
 	}
@@ -55,7 +55,7 @@ public class MovieGrainClient : IMovieGrainClient
 		else
 		{
 			var grain = _grainFactory.GetGrain<IMovieGrain>(Guid.NewGuid().ToString());
-			var result = grain.Get(id).Result;
+			var result = await grain.Get(id);
 
 			var jsonObj = JsonConvert.SerializeObject(result);
 			_distributedCache.SetString(id, jsonObj);

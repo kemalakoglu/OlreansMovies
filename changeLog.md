@@ -43,6 +43,8 @@ All notable changes to this project will be documented in this file.
 -MoviesControllerTest.cs tests were written
 -MoviesRepositoryTest.cs tests were written
 -MoviesGrainsTest.cs tests were written
+-Graph Mutations are added for add/update operations
+-Graph Input Object is added
 
 ### Changed
 -ErrorHandlingMiddleware logs are changed 

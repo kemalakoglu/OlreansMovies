@@ -36,9 +36,9 @@ public class MoviesController : Controller
 		await _client.GetList(genre).ConfigureAwait(false);
 
 	[HttpPost]
-	public async Task Set([FromBody] MovieModel entity) => await _client.Set(entity).ConfigureAwait(false);
+	public async Task<MovieModel> Set([FromBody] MovieModel entity) => await _client.Set(entity).ConfigureAwait(false);
 
 	[HttpPut("{id}")]
-	public async Task Update([FromRoute] string id, [FromBody] MovieModel entity) =>
+	public async Task<MovieModel> Update([FromRoute] string id, [FromBody] MovieModel entity) =>
 		await _client.Update(id, entity).ConfigureAwait(false);
 }
