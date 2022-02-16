@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using Movies.Contracts;
 using Movies.Contracts.Entity;
+using Movies.Core;
 using Movies.Core.Constants;
 using Newtonsoft.Json;
 using Orleans;
@@ -63,33 +64,35 @@ public class MovieGrainClient : IMovieGrainClient
 		}
 	}
 
-	public async Task<IEnumerable<MovieModel>> GetList(string genre)
+	public async Task<IEnumerable<MovieModel>> GetList(string genre, string name, string key, string description, double rate)
 	{
-		if (string.IsNullOrEmpty(genre) && _distributedCache.GetString(RedisStates.GetAll) != null)
+		if (StringExtensions.IsNullOrEmpty(genre) && StringExtensions.IsNullOrEmpty(name) 
+		    && StringExtensions.IsNullOrEmpty(key) && StringExtensions.IsNullOrEmpty(genre) 
+		    && StringExtensions.IsNullOrEmpty(description) && _distributedCache.GetString(RedisStates.GetAll) != null)
 		{
 			var filmList = _distributedCache.GetString(RedisStates.GetAll);
 			var response = JsonConvert.DeserializeObject<IEnumerable<MovieModel>>(filmList);
 			return response;
 		}
 
-		if (!string.IsNullOrEmpty(genre) && _distributedCache.GetString(RedisStates.GetByGenre + "_" + genre) != null)
-		{
-			var filmList = _distributedCache.GetString(RedisStates.GetByGenre + "_" + genre);
-			var response = JsonConvert.DeserializeObject<IEnumerable<MovieModel>>(filmList);
-			return response;
-		}
+		//if (!StringExtensions.IsNullOrEmpty(genre) && _distributedCache.GetString(RedisStates.GetByGenre + "_" + genre) != null)
+		//{
+		//	var filmList = _distributedCache.GetString(RedisStates.GetByGenre + "_" + genre);
+		//	var response = JsonConvert.DeserializeObject<IEnumerable<MovieModel>>(filmList);
+		//	return response;
+		//}
 
 		var grain = _grainFactory.GetGrain<IMovieGrain>(Guid.NewGuid().ToString());
-		var result = await grain.GetList(genre);
+		var result = await grain.GetList(genre, name, key, description, rate);
 
 
 		var jsonList = JsonConvert.SerializeObject(result);
-		if (string.IsNullOrEmpty(genre))
+		if (StringExtensions.IsNullOrEmpty(genre))
 			_distributedCache.SetString(RedisStates.GetAll, jsonList);
-		else
-			_distributedCache.SetString(RedisStates.GetByGenre + "_" + genre, jsonList);
+		//else
+		//	_distributedCache.SetString(RedisStates.GetByGenre + "_" + genre, jsonList);
 
-		return result;
+		return result.DistinctBy(x=>x._id);
 	}
 
 	public async Task<IEnumerable<MovieModel>> GetRatedMovies()
@@ -103,7 +106,7 @@ public class MovieGrainClient : IMovieGrainClient
 		else
 		{
 			var grain = _grainFactory.GetGrain<IMovieGrain>(Guid.NewGuid().ToString());
-			var result = await grain.GetList(string.Empty);
+			var result = await grain.GetList(string.Empty, string.Empty, String.Empty, String.Empty, 0);
 
 
 			var jsonList = JsonConvert.SerializeObject(result);
@@ -120,6 +123,7 @@ public class MovieGrainClient : IMovieGrainClient
 
 	public void ClearCache()
 	{
+		string refreshToken = _distributedCache.GetString("refreshToken");
 		RedisCacheService();
 		var endpoints = _connectionMultiplexer.GetEndPoints(true);
 		foreach (var endpoint in endpoints)
@@ -127,5 +131,7 @@ public class MovieGrainClient : IMovieGrainClient
 			var server = _connectionMultiplexer.GetServer(endpoint);
 			server.FlushAllDatabases();
 		}
+
+		_distributedCache.SetString("refreshToken", refreshToken);
 	}
 }

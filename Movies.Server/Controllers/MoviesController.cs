@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Movies.Contracts;
 using Movies.Contracts.Entity;
+using Movies.Server.Extensions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,6 +20,7 @@ public class MoviesController : Controller
 	}
 
 	[HttpGet]
+	[ServiceFilter(typeof(JwtAuthentication))]
 	public async Task<IEnumerable<MovieModel>> GetRatedMovies() => await _client.GetRatedMovies().ConfigureAwait(false);
 
 	// GET api/sampledata/1234
@@ -31,14 +33,18 @@ public class MoviesController : Controller
 	}
 
 	[HttpGet]
-	[Route("filter/{genre?}")]
-	public async Task<IEnumerable<MovieModel>> GetList([FromRoute] string genre) =>
-		await _client.GetList(genre).ConfigureAwait(false);
+	[ServiceFilter(typeof(JwtAuthentication))]
+	[Route("filter/")]
+	public async Task<IEnumerable<MovieModel>> GetList(string genre, string name, string key, string description, double rate) => await _client.GetList(genre, name, key, description, rate).ConfigureAwait(false);
+
+		
 
 	[HttpPost]
+	[ServiceFilter(typeof(JwtAuthentication))]
 	public async Task<MovieModel> Set([FromBody] MovieModel entity) => await _client.Set(entity).ConfigureAwait(false);
 
 	[HttpPut("{id}")]
+	[ServiceFilter(typeof(JwtAuthentication))]
 	public async Task<MovieModel> Update([FromRoute] string id, [FromBody] MovieModel entity) =>
 		await _client.Update(id, entity).ConfigureAwait(false);
 }

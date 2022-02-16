@@ -4,10 +4,12 @@ using GraphQL.Types;
 using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Movies.Server.Extensions;
 using Serilog;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using StringExtensions = Movies.Core.StringExtensions;
 
 namespace Movies.Server.Gql;
 
@@ -34,6 +36,7 @@ public class GqlController : Controller
 	}
 
 	[HttpPost]
+	[ServiceFilter(typeof(JwtAuthentication))]
 	public async Task<ActionResult> Post([FromBody] GqlRequest request)
 	{
 		if (request == null || !ModelState.IsValid)
@@ -47,7 +50,7 @@ public class GqlController : Controller
 			opts.Query = request.Query;
 			opts.ThrowOnUnhandledException = false;
 
-			if (!string.IsNullOrEmpty(vars))
+			if (!StringExtensions.IsNullOrEmpty(vars))
 				opts.Inputs = vars.ToInputs();
 		});
 

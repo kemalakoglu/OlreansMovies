@@ -95,10 +95,10 @@ public class MovieGrainClientTest
 		};
 
 		var movieGrainClient = mocker.GetMock<IMovieGrainClient>();
-		movieGrainClient.Setup(x => x.GetList(genre)).Returns(Task.FromResult(expectedData)).Verifiable();
+		movieGrainClient.Setup(x => x.GetList(genre, String.Empty, String.Empty, String.Empty, 0)).Returns(Task.FromResult(expectedData)).Verifiable();
 
 		//Act
-		var actualData = movieGrainClient.Object.GetList(genre).Result;
+		var actualData = movieGrainClient.Object.GetList(genre, String.Empty, String.Empty, String.Empty, 0).Result;
 
 		//Assert
 		Assert.Equal(expectedData.Count(), actualData.Count());
@@ -122,10 +122,10 @@ public class MovieGrainClientTest
 		};
 
 		var movieGrainClient = mocker.GetMock<IMovieGrainClient>();
-		movieGrainClient.Setup(x => x.GetList(String.Empty)).Returns(Task.FromResult(expectedData)).Verifiable();
+		movieGrainClient.Setup(x => x.GetList(String.Empty, string.Empty, string.Empty, string.Empty, 0)).Returns(Task.FromResult(expectedData)).Verifiable();
 
 		//Act
-		var actualData = movieGrainClient.Object.GetList(String.Empty).Result;
+		var actualData = movieGrainClient.Object.GetList(String.Empty, string.Empty, string.Empty, string.Empty, 0).Result;
 
 		//Assert
 		Assert.Equal(expectedData.Count(), actualData.Count());

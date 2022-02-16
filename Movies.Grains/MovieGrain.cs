@@ -19,10 +19,10 @@ public class MovieGrain : Grain<MovieModel>, IMovieGrain
 		return await _repository.Get(id);
 	}
 
-	public async Task<IEnumerable<MovieModel>> GetList(string genre)
+	public async Task<IEnumerable<MovieModel>> GetList(string genre, string name, string key, string description, double rate)
 	{
 		_repository = new MovieRepository();
-		return await _repository.GetList(genre);
+		return await _repository.GetList(genre, name, key, description, rate);
 	}
 
 	public async Task<MovieModel> Set(MovieModel entity)

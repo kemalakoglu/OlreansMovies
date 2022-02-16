@@ -70,7 +70,7 @@ public class AppInfo : IAppInfo
 		ServiceType = config.GetValue("serviceType", "dotnet");
 		ShortName = Name.Split('/').Last();
 
-		if (string.IsNullOrEmpty(Environment))
+		if (StringExtensions.IsNullOrEmpty(Environment))
 			throw new InvalidOperationException(
 				"Environment is not set. Please specify the environment via 'ASPNETCORE_ENVIRONMENT'");
 

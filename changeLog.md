@@ -47,6 +47,7 @@ All notable changes to this project will be documented in this file.
 -Graph Input Object is added
 -MongoDb Seeder was added
 -MongoDb and Redis configurations were mapped into appSettings.json
+-Authentication added as refresh token with JWT
 
 ### Changed
 -ErrorHandlingMiddleware logs are changed 
@@ -54,3 +55,4 @@ All notable changes to this project will be documented in this file.
 -Get response was checked from cache at first
 -Code Clean-up
 -appSettings were changed by environments
+-range filter and search tasks were merged into a single end-point

@@ -89,6 +89,7 @@ public class ApiStartup
 		});
 
 		services.RunMongoDbSeeder(_configuration);
+		services.AddScoped<JwtAuthentication>();
 	}
 
 	// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -123,6 +124,8 @@ public class ApiStartup
 		app.UseSwaggerUI(c => { c.SwaggerEndpoint("../swagger/OrleansMovie/swagger.json", "OrleansMovie"); });
 
 		app.UseRouting();
+
+		app.UseAuthentication();
 
 		app.UseAuthorization();
 
