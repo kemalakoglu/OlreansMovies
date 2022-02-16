@@ -77,7 +77,7 @@ public class MoviesControllerTest
 		var movieController = mocker.GetMock<MoviesController>();
 
 		//Act
-		var actualData = movieController.Object.GetList(genre).Result;
+		var actualData = movieController.Object.GetList(genre, String.Empty, String.Empty, String.Empty, 0).Result;
 
 		//Assert
 		Assert.Equal(expectedData, actualData);
@@ -96,7 +96,7 @@ public class MoviesControllerTest
 		var movieController = mocker.GetMock<MoviesController>();
 		
 		//Act
-		var actualData = movieController.Object.GetList(String.Empty).Result;
+		var actualData = movieController.Object.GetList(String.Empty, String.Empty, String.Empty, String.Empty, 0).Result;
 
 		//Assert
 		Assert.Equal(expectedData, actualData);

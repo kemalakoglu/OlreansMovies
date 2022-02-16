@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Movies.Core;
 using Movies.Core.Response;
 using Movies.Core.Web;
 using Newtonsoft.Json;
@@ -94,7 +95,7 @@ public class ErrorHandlingMiddleware
 			RC = businesException.RC;
 			if (RC == ResponseCodes.ExpireToken || RC == ResponseCodes.InvalidToken || RC == ResponseCodes.Unauthorized)
 				code = HttpStatusCode.Unauthorized;
-			else if (string.IsNullOrEmpty(businesException.RC))
+			else if (StringExtensions.IsNullOrEmpty(businesException.RC))
 				RC = ResponseCodes.Failed;
 			else
 				RC = businesException.RC;

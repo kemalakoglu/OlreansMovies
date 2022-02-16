@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Movies.Core;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -33,11 +34,11 @@ public class CustomAuthenticationHandler : AuthenticationHandler<JwtBearerOption
 
 	protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
 	{
-		string token = !string.IsNullOrEmpty(Request.Headers[Authorization])
+		string token = !StringExtensions.IsNullOrEmpty(Request.Headers[Authorization])
 			? Request.Headers[Authorization]
 			: Request.Query[Authorization];
 
-		if (string.IsNullOrEmpty(token))
+		if (StringExtensions.IsNullOrEmpty(token))
 			return AuthenticateResult.NoResult();
 
 		var provider = await GetByKey(token);

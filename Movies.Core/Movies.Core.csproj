@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="$(OrleansVersion)" />
     <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.5.0" />
     <PackageReference Include="System.Threading.Channels" Version="4.7.1" />
     <PackageReference Include="Zeppeling.Framework.Abstractions" Version="2.0.0" />
   </ItemGroup>

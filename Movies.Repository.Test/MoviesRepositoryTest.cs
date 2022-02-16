@@ -73,10 +73,10 @@ public class MoviesRepositoryTest
 		};
 
 		var movieRepository = mocker.GetMock<IMovieRepository>();
-		movieRepository.Setup(x => x.GetList(genre)).Returns(Task.FromResult(expectedData.AsQueryable())).Verifiable();
+		movieRepository.Setup(x => x.GetList(genre, string.Empty, string.Empty, string.Empty, 0)).Returns(Task.FromResult(expectedData.AsQueryable())).Verifiable();
 
 		//Act
-		var actualData = movieRepository.Object.GetList(genre).Result;
+		var actualData = movieRepository.Object.GetList(genre, string.Empty, string.Empty, string.Empty, 0).Result;
 
 		//Assert
 		Assert.Equal(expectedData.Count(), actualData.Count());
@@ -100,10 +100,10 @@ public class MoviesRepositoryTest
 		};
 
 		var movieRepository = mocker.GetMock<IMovieRepository>();
-		movieRepository.Setup(x => x.GetList(String.Empty)).Returns(Task.FromResult(expectedData.AsQueryable())).Verifiable();
+		movieRepository.Setup(x => x.GetList(String.Empty, string.Empty, string.Empty, string.Empty, 0)).Returns(Task.FromResult(expectedData.AsQueryable())).Verifiable();
 
 		//Act
-		var actualData = movieRepository.Object.GetList(String.Empty).Result;
+		var actualData = movieRepository.Object.GetList(String.Empty, string.Empty, string.Empty, string.Empty, 0).Result;
 
 		//Assert
 		Assert.Equal(expectedData.Count(), actualData.Count());

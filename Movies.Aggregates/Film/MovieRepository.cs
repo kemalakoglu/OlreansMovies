@@ -21,6 +21,8 @@ public class MovieRepository : IMovieRepository
 
 	public async Task<MovieModel> AddAsync(MovieModel entity)
 	{
+		if (!StringExtensions.IsNullOrEmpty(entity._id))
+			entity._id = null;
 		var options = new InsertOneOptions { BypassDocumentValidation = false };
 		await _collection.InsertOneAsync(entity, options);
 		return entity;
@@ -28,11 +30,17 @@ public class MovieRepository : IMovieRepository
 
 	public async Task<MovieModel> Get(string id) => _collection.Find(x => x._id == id).SingleOrDefault();
 
-	public async Task<IQueryable<MovieModel>> GetList(string genre)
+	public async Task<IQueryable<MovieModel>> GetList(string genre, string name, string key, string description, double rate)
 	{
 		var predicate = PredicateBuilder.True<MovieModel>();
-		if (!string.IsNullOrEmpty(genre))
+		if (!StringExtensions.IsNullOrEmpty(genre))
 			predicate = predicate.And(x => x.genres.Contains(genre));
+		if (!StringExtensions.IsNullOrEmpty(name))
+			predicate = predicate.And(x => x.name.Contains(name));
+		if (!StringExtensions.IsNullOrEmpty(key))
+			predicate = predicate.And(x => x.key.Contains(key));
+		if (rate>0)
+			predicate = predicate.And(x => x.rate >= rate);
 
 		IEnumerable<MovieModel> filmList = _collection.Find(predicate).ToListAsync().Result;
 		return filmList.AsQueryable();
