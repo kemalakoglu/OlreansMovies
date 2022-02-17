@@ -47,7 +47,6 @@ All notable changes to this project will be documented in this file.
 -Graph Input Object is added
 -MongoDb Seeder was added
 -MongoDb and Redis configurations were mapped into appSettings.json
--Authentication added as refresh token with JWT
 
 ### Changed
 -ErrorHandlingMiddleware logs are changed 
@@ -55,4 +54,14 @@ All notable changes to this project will be documented in this file.
 -Get response was checked from cache at first
 -Code Clean-up
 -appSettings were changed by environments
+
+
+## [1.0.0] - 15-02-2022
+### Added
+-Authentication added as refresh token with JWT
+-Dockerfile and docker-compose.yml are added to build up docker container
+
+### Changed
 -range filter and search tasks were merged into a single end-point
+-readme.md file is updated
+-nuget packages were updated
