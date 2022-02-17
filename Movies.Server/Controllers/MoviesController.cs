@@ -19,11 +19,12 @@ public class MoviesController : Controller
 		_client = client;
 	}
 
+
 	[HttpGet]
 	[ServiceFilter(typeof(JwtAuthentication))]
 	public async Task<IEnumerable<MovieModel>> GetRatedMovies() => await _client.GetRatedMovies().ConfigureAwait(false);
 
-	// GET api/sampledata/1234
+	
 	[HttpGet]
 	[Route("movie/{id}")]
 	public async Task<MovieModel> Get([FromRoute] string id)

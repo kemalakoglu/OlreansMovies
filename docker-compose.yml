@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  movies.server:
+    image: ${DOCKER_REGISTRY-}moviesserver
+    build:
+      context: .
+      dockerfile: Movies.Server\Dockerfile
+    links:
+      - mongo
+      - redis
+  mongo:
+    container_name: mongodb
+    image: mongo
+    ports:
+      - "27018:27018"
+  redis:
+    container_name: rediscontainer
+    image: redis
+    ports:
+      - "6002:6002"

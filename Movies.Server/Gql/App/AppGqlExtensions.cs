@@ -12,8 +12,7 @@ public static class AppGqlExtensions
 		services.AddGraphQL(options =>
 			{
 				options.EnableMetrics = true;
-				options.ExposeExceptions = true;
-			})
+            })
 			.AddGraphTypes(typeof(AppSchema), ServiceLifetime.Scoped)
 			.AddNewtonsoftJson();
 
