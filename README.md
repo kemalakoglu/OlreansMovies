@@ -11,7 +11,7 @@ Domain Driven Design<br/>
 ## Persistance
 MongoDb.Driver<br/>
 ###Requirements
-When you run application on your local, have to run MongoDb on locally or Docker
+When you run application on your local, have to run MongoDb on locally or Docker.
 To run Docker, please run this command on your terminal "docker pull mongodb" then run this image with 27017 port if you start project debug mode.
 
 ## Cache
